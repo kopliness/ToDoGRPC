@@ -1,13 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using ToDoGRPC.Data;
 using ToDoGRPC.Services;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql("Host=postgres_db2;Port=5432;Database=ToDoDB;Username=postgres;Password=3568"));
 
-// Add services to the container.
 builder.Services.AddGrpc();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+using var scope = app.Services.CreateScope();
+scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
 app.MapGrpcService<GreeterService>();
 app.MapGet("/",
     () =>
