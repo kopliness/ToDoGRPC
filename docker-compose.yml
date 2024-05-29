@@ -1,0 +1,6 @@
+﻿services:
+  todoapp:
+    image: todoapp
+    build:
+      context: .
+      dockerfile: Dockerfile
